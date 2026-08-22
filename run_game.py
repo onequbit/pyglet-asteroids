@@ -1,14 +1,16 @@
 # force python 3.* compability
 from __future__ import absolute_import, division, print_function
-from builtins import (bytes, str, open, super, range,
-                      zip, round, input, int, pow, object)
+
+from builtins import bytes, input, int, object, open, pow, range, round, str, super, zip
+from random import uniform
+
 # regular imports below:
 import pyglet
 from pyglet import clock, font, image, window
 from pyglet.gl import *
-from random import uniform
-from game import entities, resources
 from pyglet.window import key
+
+from game import entities, resources
 from game.util import distance
 
 window_dimensions = (800, 600)
@@ -98,7 +100,7 @@ class Camera(object):
 class Hud(object):
 
     def __init__(self, win):
-        self.fps = clock.ClockDisplay()
+        self.fps = pyglet.window.FPSDisplay(window=win)
 
     def draw(self):
         glMatrixMode(GL_MODELVIEW);
@@ -116,7 +118,7 @@ class App(object):
 
         self.win.push_handlers(self.world.player.key_handler)
 
-        clock.set_fps_limit(60)
+        # clock.set_fps_limit(60)
 
     def mainLoop(self):
         while not self.win.has_exit:

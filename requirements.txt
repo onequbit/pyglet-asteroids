@@ -1,2 +1,2 @@
 future
-pyglet
+pyglet<2.0

@@ -1,13 +1,17 @@
 # force python 3.* compability
 from __future__ import absolute_import, division, print_function
-from builtins import (bytes, str, open, super, range,
-                      zip, round, input, int, pow, object)
-# regular imports below:
-from pyglet.gl import *
-from game import resources, util
-from pyglet.window import key
+
 import math
 import random
+from builtins import bytes, input, int, object, open, pow, range, round, str, super, zip
+
+# regular imports below:
+import pyglet
+from pyglet.gl import *
+from pyglet.window import key
+
+from game import resources, util
+
 
 class Asteroid_Vertex(object):
 
