@@ -216,7 +216,7 @@ class Bullet(PhysicalObject):
     def __init__(self, *args, **kwargs):
         super(Bullet, self).__init__(
             resources.bullet_image, *args, **kwargs)
-        pyglet.clock.schedule_once(self.die, 1)
+        pyglet.clock.schedule_once(self.die, 1.5)
 
     def die(self, dt):
         self.dead = True
