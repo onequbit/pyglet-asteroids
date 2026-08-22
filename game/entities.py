@@ -83,6 +83,9 @@ class PhysicalObject(pyglet.sprite.Sprite):
         elif self.y > max_y:
             self.y = min_y
 
+    def set_lifespan_seconds(self, lifespan: float):
+        pyglet.clock.schedule_once(self.die, lifespan)
+
 class Asteroid(PhysicalObject):
     def __init__(self, size, x, y, rot, velocity_x, velocity_y):
         super(Asteroid, self).__init__(img=resources.asteroid_images[random.randint(0,8)])
@@ -209,14 +212,13 @@ class Player(PhysicalObject):
         self.engine_sprite.draw()
 
 
-
 class Bullet(PhysicalObject):
     """Bullets fired by the player"""
 
     def __init__(self, *args, **kwargs):
         super(Bullet, self).__init__(
             resources.bullet_image, *args, **kwargs)
-        pyglet.clock.schedule_once(self.die, 1.5)
+        self.set_lifespan_seconds(1.5)
 
     def die(self, dt):
         self.dead = True
