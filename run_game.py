@@ -11,9 +11,15 @@ from pyglet.gl import *
 from pyglet.window import key
 
 from game import entities, resources
-from game.util import distance
+from game.util import distance, random_coordinates, random_rotation, random_velocity_2d
 
-window_dimensions = (800, 600)
+DEFAULT_WINDOW_WIDTH = 800
+DEFAULT_WINDOW_HEIGHT = 600
+
+WINDOW_DIMENSIONS = (DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
+
+ASTEROID_SPAWN_INTERVAL_SECONDS = 1
+SCREEN_UPDATE_INTERVAL = 1/120
 
 class World(object):
 
@@ -21,8 +27,8 @@ class World(object):
         self.game_objects = []
         self.player = entities.Player()
         self.game_objects.append(self.player)
-        clock.schedule_interval(self.spawn_asteroid, 1)
-        clock.schedule_interval(self.update, 1/120)
+        clock.schedule_interval(self.spawn_asteroid, ASTEROID_SPAWN_INTERVAL_SECONDS)
+        clock.schedule_interval(self.update, SCREEN_UPDATE_INTERVAL)
 
     def spawn_asteroid(self, dt):
         #[obj for obj in self.game_objects if isinstance(obj, entities.Asteroid)]
@@ -30,14 +36,13 @@ class World(object):
             size = uniform(0.8, 1.0)
             x, y = self.player.x, self.player.y
             while distance((x, y), (self.player.x, self.player.y)) < 100:
-                x = uniform(-window_dimensions[0]/2, window_dimensions[0]/2)
-                y = uniform(-window_dimensions[1]/2, window_dimensions[1]/2)
-            rot = uniform(0.0, 360.0)
-            velocity_x = uniform(-30, 30)
-            velocity_y = uniform(5, 3)
-            ent = entities.Asteroid(size, x, y, rot, velocity_x, velocity_y)
-            self.game_objects.append(ent)
-            return ent
+                x, y = random_coordinates(*WINDOW_DIMENSIONS)
+
+            rot = random_rotation()
+            velocity_x, velocity_y = random_velocity_2d((-30, 30), (5, 3))
+            asteroid = entities.Asteroid(size, x, y, rot, velocity_x, velocity_y)
+            self.game_objects.append(asteroid)
+            return asteroid
 
     def update(self, dt):
 
@@ -111,7 +116,7 @@ class App(object):
 
     def __init__(self):
         self.world = World()
-        self.win = window.Window(fullscreen=False, vsync=True, width=window_dimensions[0], height=window_dimensions[1])
+        self.win = window.Window(fullscreen=False, vsync=True, width=WINDOW_DIMENSIONS[0], height=WINDOW_DIMENSIONS[1])
         self.camera = Camera(self.win, zoom=200.0)
         self.hud = Hud(self.win)
 
